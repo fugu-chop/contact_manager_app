@@ -10,6 +10,21 @@ class Model {
     });
   };
 
+  getContact(id) {
+    return new Promise((resolve, reject) => {
+      const request = new XMLHttpRequest();
+      request.open('GET', `api/contacts/${id}`);
+      request.addEventListener('load', () => {
+        if (request.status === 200) {
+          resolve(request.response);
+        } else {
+          reject('Error: That contact could not be found');
+        }
+      });
+      request.send();
+    })
+  }
+
   saveContact(payload) {
     return new Promise((resolve, reject) => {
       const request = new XMLHttpRequest();
@@ -29,12 +44,13 @@ class Model {
   updateContact(id, payload) {
     return new Promise((resolve, reject) => {
       const request = new XMLHttpRequest();
-      request.open('', `api/contacts/${id}`);
+      request.open('PUT', `api/contacts/${id}`);
+      request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
       request.addEventListener('load', () => {
         if (request.status === 201) {
           resolve(request.response);
         } else {
-          reject(`Error: unable to update user id ${id}.`)
+          reject('Error: unable to update user.');
         }
       })
       request.send(JSON.stringify(payload));
