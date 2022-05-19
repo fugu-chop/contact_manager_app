@@ -31,8 +31,8 @@
       <p>{{ phone_number }}</p>
       <h4>Email</h4>
       <p>{{ email }}</p>
-      <h4>Tags:</h4>
       {{#if tags}}
+      <h4>Tags:</h4>
       <ul>
         {{#each tags}}
         <li>
@@ -43,41 +43,4 @@
       {{/if}}
     </div>
   </script>
-
-  <!-- This is just to test the population of the handlebars stuff -->
-  <script>
-    // Note I've split up the tags manually for now
-    // Will need another function assist in forming the array
-    const singlePayload = {
-      "id": 1,
-      "full_name": "Arthur Dent",
-      "email": "dent@example.com",
-      "phone_number": "12345678901",
-      "tags": ['hello', 'blompy']
-    }
-
-    const payload = [
-      {
-        "id": 1,
-        "full_name": "Arthur Dent",
-        "email": "dent@example.com",
-        "phone_number": "12345678901",
-        "tags": ["work", "business"]
-      },
-      {
-        "id": 2,
-        "full_name": "George Smiley",
-        "email": "smiley@example.com",
-        "phone_number": "12345678901",
-        "tags": null
-      }
-    ]
-
-    const cardTemplate = Handlebars.compile(document.getElementById('contactCard').innerHTML);
-    const cardList = Handlebars.compile(document.getElementById('contactList').innerHTML);
-    Handlebars.registerPartial('cardTemplate', document.getElementById('contactCard').innerHTML);
-    document.querySelector('body').insertAdjacentHTML("beforeend", cardList({contact: payload}));
-
-  </script>
-
 </html>
