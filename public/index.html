@@ -16,13 +16,15 @@
     </header>
   </body>
 
-  <!-- <script id='contactList' type='text/x-handlebars'>
-    {{#each contact}}
-    {{> contactCard}}
-    {{/each}}
-  </script> -->
+  <script id="contactList" type="text/x-handlebars">
+    <div class="contact-list">
+      {{#each contact}}
+      {{> cardTemplate}}
+      {{/each}}
+    </div>
+  </script>
 
-  <script id="contactCard" type='text/x-handlebars'>
+  <script id="contactCard" type="text/x-handlebars">
     <div class="contact-card">
       <h3>{{ full_name }}</h3>
       <h4>Phone Number:</h4>
@@ -32,29 +34,26 @@
       <h4>Tags:</h4>
       {{#if tags}}
       <ul>
-      {{#each tags}}
-      {{> tagTemplate}}
-      {{/each}}
+        {{#each tags}}
+        <li>
+          <a href="/">{{this}}</a>
+        </li>
+        {{/each}}
       </ul>
       {{/if}}
     </div>
   </script>
 
-  <script id="contactTags" type='text/x-handlebars'>
-    <li>
-      <a href='/'>{{tagTemplate}}</a>
-    </li>
-  </script>
-
   <!-- This is just to test the population of the handlebars stuff -->
   <script>
     // Note I've split up the tags manually for now
+    // Will need another function assist in forming the array
     const singlePayload = {
       "id": 1,
       "full_name": "Arthur Dent",
       "email": "dent@example.com",
       "phone_number": "12345678901",
-      "tags": ['blob', 'belly']
+      "tags": ['hello', 'blompy']
     }
 
     const payload = [
@@ -75,10 +74,9 @@
     ]
 
     const cardTemplate = Handlebars.compile(document.getElementById('contactCard').innerHTML);
-    const tagTemplate = Handlebars.compile(document.getElementById('contactTags').innerHTML);
-    Handlebars.registerPartial('tagTemplate', document.getElementById('contactTags').innerHTML);
-    document.querySelector('body').insertAdjacentHTML("beforeend", cardTemplate(singlePayload));
-    document.querySelector('.contact-card ul');
+    const cardList = Handlebars.compile(document.getElementById('contactList').innerHTML);
+    Handlebars.registerPartial('cardTemplate', document.getElementById('contactCard').innerHTML);
+    document.querySelector('body').insertAdjacentHTML("beforeend", cardList({contact: payload}));
 
   </script>
 
