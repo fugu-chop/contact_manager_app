@@ -14,11 +14,72 @@
     <header>
       <h1>Contact Manager</h1>
     </header>
-    <!-- Can/Should I put the entire thing into a component? -->
-    <!-- <div id="contact-container">
-
-    </div> -->
   </body>
 
+  <!-- <script id='contactList' type='text/x-handlebars'>
+    {{#each contact}}
+    {{> contactCard}}
+    {{/each}}
+  </script> -->
+
+  <script id="contactCard" type='text/x-handlebars'>
+    <div class="contact-card">
+      <h3>{{ full_name }}</h3>
+      <h4>Phone Number:</h4>
+      <p>{{ phone_number }}</p>
+      <h4>Email</h4>
+      <p>{{ email }}</p>
+      <h4>Tags:</h4>
+      {{#if tags}}
+      <ul>
+      {{#each tags}}
+      {{> tagTemplate}}
+      {{/each}}
+      </ul>
+      {{/if}}
+    </div>
+  </script>
+
+  <script id="contactTags" type='text/x-handlebars'>
+    <li>
+      <a href='/'>{{tagTemplate}}</a>
+    </li>
+  </script>
+
+  <!-- This is just to test the population of the handlebars stuff -->
+  <script>
+    // Note I've split up the tags manually for now
+    const singlePayload = {
+      "id": 1,
+      "full_name": "Arthur Dent",
+      "email": "dent@example.com",
+      "phone_number": "12345678901",
+      "tags": ['blob', 'belly']
+    }
+
+    const payload = [
+      {
+        "id": 1,
+        "full_name": "Arthur Dent",
+        "email": "dent@example.com",
+        "phone_number": "12345678901",
+        "tags": ["work", "business"]
+      },
+      {
+        "id": 2,
+        "full_name": "George Smiley",
+        "email": "smiley@example.com",
+        "phone_number": "12345678901",
+        "tags": null
+      }
+    ]
+
+    const cardTemplate = Handlebars.compile(document.getElementById('contactCard').innerHTML);
+    const tagTemplate = Handlebars.compile(document.getElementById('contactTags').innerHTML);
+    Handlebars.registerPartial('tagTemplate', document.getElementById('contactTags').innerHTML);
+    document.querySelector('body').insertAdjacentHTML("beforeend", cardTemplate(singlePayload));
+    document.querySelector('.contact-card ul');
+
+  </script>
 
 </html>

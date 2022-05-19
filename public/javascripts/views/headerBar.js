@@ -25,14 +25,8 @@ class HeaderBar {
   // Use toggle instead of deleting and recreating to avoid excess DOM manipulation
   // Use for Edit and Add Contact pages
   toggleHeaderbar() {
-    let displayAttribute = this.parentDiv.getAttribute('display')
-    let attribute;
-    if (displayAttribute && displayAttribute === 'none') {
-      attribute = 'block';
-    } else {
-      attribute = 'none';
-    }
-
+    const displayAttribute = this.parentDiv.getAttribute('display');
+    let attribute = (displayAttribute && displayAttribute === 'none') ? 'block' : 'none';
     this.parentDiv.style.display = attribute;
   }
 
@@ -43,7 +37,7 @@ class HeaderBar {
   renderHeaderBar() {
     const header = document.querySelector('header');
     this._generateHeaderBar();
-    header.insertAdjacentElement('afterend', this.parentDiv)
+    header.insertAdjacentElement('afterend', this.parentDiv);
   }
 }
 
