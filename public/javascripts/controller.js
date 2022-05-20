@@ -38,7 +38,7 @@ class Controller {
   _formatPayloadTags(payload) {
     return payload.map(entry => {
       let entryCopy = Object.assign({}, entry);
-      if (entryCopy.tags) entryCopy.tags = entryCopy.tags.split(', ');
+      if (entryCopy.tags) entryCopy.tags = entryCopy.tags.split(',');
       return entryCopy
     });
   }
@@ -64,32 +64,10 @@ const contactManagerController = new Controller();
 document.addEventListener('DOMContentLoaded', () => {
   // This is the default 'homepage' render
   // Header should not be visible during the add/edit contact interaction
-
-  const payload = [
-    {
-      "id": 1,
-      "full_name": "Arthur Dent",
-      "email": "dent@example.com",
-      "phone_number": "12345678901",
-      "tags": "work, business"
-    },
-    {
-      "id": 2,
-      "full_name": "George Smiley",
-      "email": "smiley@example.com",
-      "phone_number": "12345678901",
-      "tags": null
-    }
-  ]
-
-
   headerBar.renderHeaderBar();
   contactModel.getAllContacts().then(payload => {
-    // Erroring out. Object is not an interable. Maybe need to play around with async function
-    console.log(Array.isArray(payload));
-    console.log(payload);
-    payload.forEach(item => console.log(item))
-    // contactManagerController.showContacts(payload);
+    let data = JSON.parse(payload)
+    contactManagerController.showContacts(data);
   });
   contactManagerController.attachHeaderEventListeners();
 });
