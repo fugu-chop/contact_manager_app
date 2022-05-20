@@ -24,6 +24,8 @@
 
   <script id="contactCard" type="text/x-handlebars">
     <div class="contact-card">
+      <!-- Set this to display: none in the CSS -->
+      <p class='contact-card-id'>{{ id }}</p>
       <h3>{{ full_name }}</h3>
       <h4>Phone Number:</h4>
       <p>{{ phone_number }}</p>
@@ -39,6 +41,8 @@
         {{/each}}
       </ul>
       {{/if}}
+    <button type="submit" class="edit-contact-button" id={{ id }}>Edit</button>
+    <button type="submit" class="delete-contact-button" id={{ id }}>Delete</button>
     </div>
   </script>
 </html>

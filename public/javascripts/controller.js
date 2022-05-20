@@ -1,3 +1,4 @@
+import model from './model.js';
 import contactModel from './model.js'
 import headerBar from './views/headerBar.js'
 
@@ -16,7 +17,7 @@ class Controller {
       event.preventDefault();
       headerBar.clearSearchBar();
       this._clearContacts();
-      this.showContacts();
+      this.showAllContacts();
     });
   }
 
@@ -28,7 +29,7 @@ class Controller {
     });
   }
 
-  _bindAddContactbuttonListener() {
+  _bindAddContactButtonListener() {
     let addContactButton = document.getElementById('add-contact-button');
     addContactButton.addEventListener('click', event => {
       event.preventDefault();
@@ -39,7 +40,35 @@ class Controller {
   attachHeaderEventListeners() {
     this._bindSearchBarListener();
     this._bindResetButtonListener();
-    this._bindAddContactbuttonListener();
+    this._bindAddContactButtonListener();
+  }
+
+  // This currently isn't being picked up
+  _bindDeleteContactButtonlistener() {
+    const deleteButtons = Array.from(document.getElementsByClassName('delete-contact-button'));
+    deleteButtons.forEach(node => {
+      node.addEventListener('click', event => {
+        event.preventDefault();
+        console.log('hello!');
+        // model.deleteContact(Number(node.id));
+        // this.showAllContacts()
+      });
+    });
+  }
+
+  _bindEditContactButtonlistener() { 
+    const editButtons = Array.from(document.getElementsByClassName('edit-contact-button'));
+    editButtons.forEach(node => {
+      node.addEventListener('click', event => {
+        event.preventDefault();
+        // open the div to add a contact
+      });
+    });
+  }
+
+  attachContactButtonListeners() {
+    this._bindDeleteContactButtonlistener();
+    this._bindEditContactButtonlistener();
   }
 
   _formatPayloadTags(payload) {
@@ -64,7 +93,7 @@ class Controller {
     contactsArr.forEach(node => node.remove());
   }
 
-  showContacts() {
+  showAllContacts() {
     contactModel.getAllContacts().then(payload => {
       let data = JSON.parse(payload)
       contactManagerController._renderContacts(data);
@@ -78,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // This is the default 'homepage' render
   // Header should not be visible during the add/edit contact interaction
   headerBar.renderHeaderBar();
-  contactManagerController.showContacts();
+  contactManagerController.showAllContacts();
   contactManagerController.attachHeaderEventListeners();
+  contactManagerController.attachContactButtonListeners();
 });
