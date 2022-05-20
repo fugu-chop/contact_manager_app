@@ -17,11 +17,9 @@
   </body>
 
   <script id="contactList" type="text/x-handlebars">
-    <div class="contact-list">
-      {{#each contact}}
-      {{> cardTemplate}}
-      {{/each}}
-    </div>
+    {{#each contact}}
+    {{> cardTemplate}}
+    {{/each}}
   </script>
 
   <script id="contactCard" type="text/x-handlebars">

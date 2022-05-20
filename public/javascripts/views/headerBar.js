@@ -30,6 +30,10 @@ class HeaderBar {
     this.parentDiv.style.display = attribute;
   }
 
+  clearSearchBar() {
+    document.getElementById('search-bar').value = '';
+  }
+
   getSearchInput() {
     return document.getElementById('search-bar').value;
   }

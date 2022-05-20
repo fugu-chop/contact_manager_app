@@ -14,8 +14,9 @@ class Controller {
     let resetButton = document.getElementById('reset-view-button');
     resetButton.addEventListener('click', event => {
       event.preventDefault();
-      // Empty the search bar
-      // make the call to getAllContacts
+      headerBar.clearSearchBar();
+      this._clearContacts();
+      this.showContacts();
     });
   }
 
@@ -35,6 +36,12 @@ class Controller {
     });
   }
 
+  attachHeaderEventListeners() {
+    this._bindSearchBarListener();
+    this._bindResetButtonListener();
+    this._bindAddContactbuttonListener();
+  }
+
   _formatPayloadTags(payload) {
     return payload.map(entry => {
       let entryCopy = Object.assign({}, entry);
@@ -45,17 +52,23 @@ class Controller {
 
   // This feels slightly out of place, like it should be in a view component
   // However, an objective of this task is to practice Handlebars, so it will stay here
-  showContacts(payload) {
+  _renderContacts(payload) {
     const cleanedPayload = this._formatPayloadTags(payload);
     const cardList = Handlebars.compile(document.getElementById('contactList').innerHTML);
     Handlebars.registerPartial('cardTemplate', document.getElementById('contactCard').innerHTML);
     document.querySelector('body').insertAdjacentHTML("beforeend", cardList({contact: cleanedPayload}));
   }
 
-  attachHeaderEventListeners() {
-    this._bindSearchBarListener();
-    this._bindResetButtonListener();
-    this._bindAddContactbuttonListener();
+  _clearContacts() {
+    const contactsArr = Array.from(document.getElementsByClassName('contact-card'));
+    contactsArr.forEach(node => node.remove());
+  }
+
+  showContacts() {
+    contactModel.getAllContacts().then(payload => {
+      let data = JSON.parse(payload)
+      contactManagerController._renderContacts(data);
+    });
   }
 }
 
@@ -65,9 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // This is the default 'homepage' render
   // Header should not be visible during the add/edit contact interaction
   headerBar.renderHeaderBar();
-  contactModel.getAllContacts().then(payload => {
-    let data = JSON.parse(payload)
-    contactManagerController.showContacts(data);
-  });
+  contactManagerController.showContacts();
   contactManagerController.attachHeaderEventListeners();
 });
