@@ -1,7 +1,7 @@
 import model from './model.js';
 import contactModel from './model.js'
 import headerBar from './views/headerBar.js'
-import contactFrom from './views/contactForm.js'
+import contactForm from './views/contactForm.js';
 
 class Controller {
   _debounce(func, delay) {
@@ -34,7 +34,9 @@ class Controller {
     let addContactButton = document.getElementById('add-contact-button');
     addContactButton.addEventListener('click', event => {
       event.preventDefault();
-      // 
+      contactForm.toggleContactForm();
+      this._clearContacts();
+      headerBar.toggleHeaderbar();
     });
   }
 
@@ -96,7 +98,6 @@ class Controller {
   _showContactForm() {
     this._clearContacts();
     headerBar.toggleHeaderbar();
-
   }
 
   async _showAllContacts() {
@@ -118,7 +119,6 @@ const contactManagerController = new Controller();
 
 document.addEventListener('DOMContentLoaded', () => {
   // This is the default 'homepage' render
-  // Header should not be visible during the add/edit contact interaction
   contactManagerController.renderHomeView();
-  contactFrom.showContactForm();
+  contactForm.renderContactForm();
 });

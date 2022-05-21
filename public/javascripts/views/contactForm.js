@@ -1,7 +1,8 @@
 class ContactForm {
   constructor() {
     this.parentDiv = document.createElement('div');
-    this.parentDiv.id = 'contact-div'
+    this.parentDiv.id = 'contact-div';
+    this.parentDiv.style = 'display: none';
     this.form = document.createElement('form');
     this.form.id = 'contact-form'
     this.fieldset = document.createElement('fieldset');
@@ -87,7 +88,7 @@ class ContactForm {
     const submitButton = document.createElement('input');
     submitButton.setAttribute('type', 'submit');
     submitButton.className = 'submit-button';
-    submitButton.value = "Add contact";
+    submitButton.value = "Save contact";
     this.contactDl.appendChild(submitButton);
   }
 
@@ -99,7 +100,13 @@ class ContactForm {
     this._generateSubmitButton();
   }
 
-  showContactForm() {
+  toggleContactForm() {
+    const displayAttribute = this.parentDiv.getAttribute('style');
+    let attribute = (displayAttribute === 'display: none;') ? 'block' : 'none';
+    this.parentDiv.setAttribute('style', `display: ${attribute}`);
+  }
+
+  renderContactForm() {
     const header = document.querySelector('header');
     this._generateForm();
     header.insertAdjacentElement('afterend', this.parentDiv);
