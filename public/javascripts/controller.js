@@ -37,26 +37,28 @@ class Controller {
     });
   }
 
-  attachHeaderEventListeners() {
+  _attachHeaderEventListeners() {
     this._bindSearchBarListener();
     this._bindResetButtonListener();
     this._bindAddContactButtonListener();
   }
 
-  // This currently isn't being picked up
   _bindDeleteContactButtonlistener() {
     const deleteButtons = Array.from(document.getElementsByClassName('delete-contact-button'));
     deleteButtons.forEach(node => {
       node.addEventListener('click', event => {
         event.preventDefault();
-        console.log('hello!');
-        // model.deleteContact(Number(node.id));
-        // this.showAllContacts()
+        model.deleteContact(Number(node.id));
+        console.log('deleted!')
+        // This currently doesn't re-render - why?
+        // I probably need a function to clear everything in the DOM?
+        this._clearContacts();
+        this._showAllContacts();
       });
     });
   }
 
-  _bindEditContactButtonlistener() { 
+  _bindEditContactButtonlistener() {
     const editButtons = Array.from(document.getElementsByClassName('edit-contact-button'));
     editButtons.forEach(node => {
       node.addEventListener('click', event => {
@@ -66,7 +68,7 @@ class Controller {
     });
   }
 
-  attachContactButtonListeners() {
+  _attachContactButtonListeners() {
     this._bindDeleteContactButtonlistener();
     this._bindEditContactButtonlistener();
   }
@@ -79,13 +81,18 @@ class Controller {
     });
   }
 
+  _deleteContactsContent() {
+    let contactBody = document.querySelector('#contact-body');
+    if (contactBody) contactBody.remove();
+  }
+
   // This feels slightly out of place, like it should be in a view component
   // However, an objective of this task is to practice Handlebars, so it will stay here
   _renderContacts(payload) {
     const cleanedPayload = this._formatPayloadTags(payload);
     const cardList = Handlebars.compile(document.getElementById('contactList').innerHTML);
     Handlebars.registerPartial('cardTemplate', document.getElementById('contactCard').innerHTML);
-    document.querySelector('body').insertAdjacentHTML("beforeend", cardList({contact: cleanedPayload}));
+    document.querySelector('body').insertAdjacentHTML("beforeend", cardList({ contact: cleanedPayload }));
   }
 
   _clearContacts() {
@@ -93,11 +100,18 @@ class Controller {
     contactsArr.forEach(node => node.remove());
   }
 
-  showAllContacts() {
-    contactModel.getAllContacts().then(payload => {
-      let data = JSON.parse(payload)
-      contactManagerController._renderContacts(data);
-    });
+  async _showAllContacts() {
+    this._deleteContactsContent()
+    let payload = await contactModel.getAllContacts();
+    let data = JSON.parse(payload)
+    contactManagerController._renderContacts(data);
+  }
+
+  async showContent() {
+    headerBar.showHeaderBar();
+    await contactManagerController._showAllContacts();
+    contactManagerController._attachHeaderEventListeners();
+    contactManagerController._attachContactButtonListeners();
   }
 }
 
@@ -106,8 +120,5 @@ const contactManagerController = new Controller();
 document.addEventListener('DOMContentLoaded', () => {
   // This is the default 'homepage' render
   // Header should not be visible during the add/edit contact interaction
-  headerBar.renderHeaderBar();
-  contactManagerController.showAllContacts();
-  contactManagerController.attachHeaderEventListeners();
-  contactManagerController.attachContactButtonListeners();
+  contactManagerController.showContent();
 });

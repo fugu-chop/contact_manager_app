@@ -19,12 +19,5 @@
     "email": "ph@example.com",
     "phone_number": "54321098761",
     "tags": null
-  },
-  {
-    "full_name": "Bryan Yobby",
-    "phone_number": "12345678901",
-    "email": "yes@jest.com",
-    "tags": "work",
-    "id": 4
   }
 ]

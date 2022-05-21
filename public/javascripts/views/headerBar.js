@@ -38,7 +38,7 @@ class HeaderBar {
     return document.getElementById('search-bar').value;
   }
 
-  renderHeaderBar() {
+  showHeaderBar() {
     const header = document.querySelector('header');
     this._generateHeaderBar();
     header.insertAdjacentElement('afterend', this.parentDiv);
