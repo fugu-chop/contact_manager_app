@@ -25,9 +25,10 @@ class HeaderBar {
   // Use toggle instead of deleting and recreating to avoid excess DOM manipulation
   // Use for Edit and Add Contact pages
   toggleHeaderbar() {
-    const displayAttribute = this.parentDiv.getAttribute('display');
-    let attribute = (displayAttribute && displayAttribute === 'none') ? 'block' : 'none';
-    this.parentDiv.style.display = attribute;
+    const displayAttribute = this.parentDiv.getAttribute('style');
+    let attribute = (displayAttribute === 'display: none;' ||
+      displayAttribute === 'display: none') ? 'block' : 'none';
+    this.parentDiv.setAttribute('style', `display: ${attribute}`);
   }
 
   clearSearchBar() {

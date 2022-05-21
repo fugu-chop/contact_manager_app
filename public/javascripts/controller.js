@@ -34,9 +34,7 @@ class Controller {
     let addContactButton = document.getElementById('add-contact-button');
     addContactButton.addEventListener('click', event => {
       event.preventDefault();
-      contactForm.toggleContactForm();
-      this._clearContacts();
-      headerBar.toggleHeaderbar();
+      this._toggleContactForm();
     });
   }
 
@@ -44,9 +42,11 @@ class Controller {
     this._bindSearchBarListener();
     this._bindResetButtonListener();
     this._bindAddContactButtonListener();
+    this._bindSaveContactButtonListener();
+    this._bindCancelButtonListener();
   }
 
-  _bindDeleteContactButtonlistener() {
+  _bindDeleteContactButtonListener() {
     const deleteButtons = Array.from(document.getElementsByClassName('delete-contact-button'));
     deleteButtons.forEach(node => {
       node.addEventListener('click', event => {
@@ -58,19 +58,37 @@ class Controller {
     });
   }
 
-  _bindEditContactButtonlistener() {
+  _bindEditContactButtonListener() {
     const editButtons = Array.from(document.getElementsByClassName('edit-contact-button'));
     editButtons.forEach(node => {
       node.addEventListener('click', event => {
         event.preventDefault();
-        // open the div to add a contact
+        // This needs to get some info about the contact on which we are clicking the button for
+        this._toggleContactForm();
       });
     });
   }
 
+  _bindSaveContactButtonListener() {
+    const saveContactButton = document.getElementById('submit-button');
+    saveContactButton.addEventListener('click', event => {
+      event.preventDefault();
+
+    })
+  }
+
+  _bindCancelButtonListener() {
+    const cancelButton = document.getElementById('cancel-button');
+    cancelButton.addEventListener('click', event => {
+      event.preventDefault();
+      this._toggleContactForm();
+      this._showAllContacts();
+    })
+  }
+
   _attachContactButtonListeners() {
-    this._bindDeleteContactButtonlistener();
-    this._bindEditContactButtonlistener();
+    this._bindDeleteContactButtonListener();
+    this._bindEditContactButtonListener();
   }
 
   _formatPayloadTags(payload) {
@@ -95,7 +113,8 @@ class Controller {
     contactsArr.forEach(node => node.remove());
   }
 
-  _showContactForm() {
+  _toggleContactForm() {
+    contactForm.toggleContactForm();
     this._clearContacts();
     headerBar.toggleHeaderbar();
   }

@@ -84,10 +84,18 @@ class ContactForm {
     this.contactDl.appendChild(tagDd);
   }
 
+  _generateCancelButton() {
+    const cancelButton = document.createElement('input');
+    cancelButton.setAttribute('type', 'submit');
+    cancelButton.id = 'cancel-button';
+    cancelButton.value = "Cancel";
+    this.contactDl.appendChild(cancelButton);
+  }
+
   _generateSubmitButton() {
     const submitButton = document.createElement('input');
     submitButton.setAttribute('type', 'submit');
-    submitButton.className = 'submit-button';
+    submitButton.id = 'submit-button';
     submitButton.value = "Save contact";
     this.contactDl.appendChild(submitButton);
   }
@@ -98,11 +106,13 @@ class ContactForm {
     this._generatePhoneField();
     this._generateTagsField();
     this._generateSubmitButton();
+    this._generateCancelButton();
   }
 
   toggleContactForm() {
     const displayAttribute = this.parentDiv.getAttribute('style');
-    let attribute = (displayAttribute === 'display: none;') ? 'block' : 'none';
+    let attribute = (displayAttribute === 'display: none;' ||
+      displayAttribute === 'display: none') ? 'block' : 'none';
     this.parentDiv.setAttribute('style', `display: ${attribute}`);
   }
 
