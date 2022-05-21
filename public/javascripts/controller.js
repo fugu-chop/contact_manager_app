@@ -35,6 +35,7 @@ class Controller {
     addContactButton.addEventListener('click', event => {
       event.preventDefault();
       this._toggleContactForm();
+      this._bindSaveContactButtonListener('add');
     });
   }
 
@@ -42,7 +43,6 @@ class Controller {
     this._bindSearchBarListener();
     this._bindResetButtonListener();
     this._bindAddContactButtonListener();
-    this._bindSaveContactButtonListener();
     this._bindCancelButtonListener();
   }
 
@@ -58,23 +58,25 @@ class Controller {
     });
   }
 
+  // This pathway does not work after the first interaction
+  // After 
   _bindEditContactButtonListener() {
     const editButtons = Array.from(document.getElementsByClassName('edit-contact-button'));
     editButtons.forEach(node => {
       node.addEventListener('click', event => {
         event.preventDefault();
-        // This needs to get some info about the contact on which we are clicking the button for
         this._toggleContactForm();
+        this._bindSaveContactButtonListener('edit')
+
       });
     });
   }
 
-  _bindSaveContactButtonListener() {
+  // The function that we call should depend on how we got there
+  // We also need to unbind this whenever the general screen renders
+  _bindSaveContactButtonListener(source) {
     const saveContactButton = document.getElementById('submit-button');
-    saveContactButton.addEventListener('click', event => {
-      event.preventDefault();
-
-    })
+    saveContactButton.addEventListener('click', event => this._saveButtonEventHandler(event, source));
   }
 
   _bindCancelButtonListener() {
@@ -83,12 +85,24 @@ class Controller {
       event.preventDefault();
       this._toggleContactForm();
       this._showAllContacts();
-    })
+    });
   }
 
-  _attachContactButtonListeners() {
-    this._bindDeleteContactButtonListener();
-    this._bindEditContactButtonListener();
+  _saveButtonEventHandler(event, source) {
+    event.preventDefault();
+    if (source === 'add') {
+      console.log('hello friendo, this is add!')
+    } else {
+      console.log('hello, this is edit!')
+    }
+  }
+
+  // Try to get this right, rather than cloning
+  _unbindSaveButtonListener() {
+    let oldSaveButton = document.getElementById('submit-button');
+    var newSaveButton = oldSaveButton.cloneNode(false);
+    oldSaveButton.parentNode.replaceChild(newSaveButton, oldSaveButton);
+    oldSaveButton.remove();
   }
 
   _formatPayloadTags(payload) {
@@ -114,9 +128,11 @@ class Controller {
   }
 
   _toggleContactForm() {
+    this._unbindSaveButtonListener();
     contactForm.toggleContactForm();
     this._clearContacts();
     headerBar.toggleHeaderbar();
+    this._bindEditContactButtonListener();
   }
 
   async _showAllContacts() {
@@ -124,13 +140,14 @@ class Controller {
     let payload = await contactModel.getAllContacts();
     let data = JSON.parse(payload)
     contactManagerController._renderContacts(data);
+    contactManagerController._bindDeleteContactButtonListener();
+    contactManagerController._bindEditContactButtonListener();
   }
 
   async renderHomeView() {
     headerBar.showHeaderBar();
     await contactManagerController._showAllContacts();
     contactManagerController._attachHeaderEventListeners();
-    contactManagerController._attachContactButtonListeners();
   }
 }
 

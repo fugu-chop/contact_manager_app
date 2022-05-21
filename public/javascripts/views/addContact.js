@@ -1,1 +1,0 @@
-// This should inherit from contactForm, and have 'submit' and 'cancel' buttons
