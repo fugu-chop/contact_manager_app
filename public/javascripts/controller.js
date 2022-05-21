@@ -1,6 +1,7 @@
 import model from './model.js';
 import contactModel from './model.js'
 import headerBar from './views/headerBar.js'
+import contactFrom from './views/contactForm.js'
 
 class Controller {
   _debounce(func, delay) {
@@ -17,7 +18,7 @@ class Controller {
       event.preventDefault();
       headerBar.clearSearchBar();
       this._clearContacts();
-      this.showAllContacts();
+      this._showAllContacts();
     });
   }
 
@@ -49,9 +50,6 @@ class Controller {
       node.addEventListener('click', event => {
         event.preventDefault();
         model.deleteContact(Number(node.id));
-        console.log('deleted!')
-        // This currently doesn't re-render - why?
-        // I probably need a function to clear everything in the DOM?
         this._clearContacts();
         this._showAllContacts();
       });
@@ -81,11 +79,6 @@ class Controller {
     });
   }
 
-  _deleteContactsContent() {
-    let contactBody = document.querySelector('#contact-body');
-    if (contactBody) contactBody.remove();
-  }
-
   // This feels slightly out of place, like it should be in a view component
   // However, an objective of this task is to practice Handlebars, so it will stay here
   _renderContacts(payload) {
@@ -100,14 +93,20 @@ class Controller {
     contactsArr.forEach(node => node.remove());
   }
 
+  _showContactForm() {
+    this._clearContacts();
+    headerBar.toggleHeaderbar();
+
+  }
+
   async _showAllContacts() {
-    this._deleteContactsContent()
+    this._clearContacts();
     let payload = await contactModel.getAllContacts();
     let data = JSON.parse(payload)
     contactManagerController._renderContacts(data);
   }
 
-  async showContent() {
+  async renderHomeView() {
     headerBar.showHeaderBar();
     await contactManagerController._showAllContacts();
     contactManagerController._attachHeaderEventListeners();
@@ -120,5 +119,5 @@ const contactManagerController = new Controller();
 document.addEventListener('DOMContentLoaded', () => {
   // This is the default 'homepage' render
   // Header should not be visible during the add/edit contact interaction
-  contactManagerController.showContent();
+  contactManagerController.renderHomeView();
 });

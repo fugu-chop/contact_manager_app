@@ -14,36 +14,54 @@
     <header>
       <h1>Contact Manager</h1>
     </header>
-  </body>
 
-  <script id="contactList" type="text/x-handlebars">
-    {{#each contact}}
-    {{> cardTemplate}}
-    {{/each}}
-  </script>
-
-  <script id="contactCard" type="text/x-handlebars">
-    <div class="contact-card">
-      <!-- Set this to display: none in the CSS -->
-      <p class='contact-card-id'>{{ id }}</p>
-      <h3>{{ full_name }}</h3>
-      <h4>Phone Number:</h4>
-      <p>{{ phone_number }}</p>
-      <h4>Email</h4>
-      <p>{{ email }}</p>
-      {{#if tags}}
-      <h4>Tags:</h4>
-      <ul>
-        {{#each tags}}
-        <li>
-          <a href="/">{{this}}</a>
-        </li>
-        {{/each}}
-      </ul>
-      {{/if}}
-    <button type="submit" class="edit-contact-button" id={{ id }}>Edit</button>
-    <button type="submit" class="delete-contact-button" id={{ id }}>Delete</button>
+    <!-- Contact Form -->
+    <div id="contact-form">
+      <form action="">
+        <dl>
+          <dt><label for="name">Full Name</label></dt>
+          <dd><input type="text" name="name" id="name" placeholder="Your name" required /></dd>
+          <dt><label for="email">Email Address</label></dt>
+          <dd><input type="email" name="email" id="email" placeholder="you@example.com" required /></dd>
+          <dt><label for="phone">Phone Number</label></dt>
+          <dd><input type="tel" name="name" id="phone" pattern="[0-9]{12}" placeholder="Format: 0123456789" required />
+          </dd>
+          <dt><label for="tags">Tags</label></dt>
+          <dd><input type="text" name="tags" id="tags" placeholder="Add any tags you want" /></dd>
+          <input type="submit" value="Add Contact" class="button" />
+        </dl>
+      </form>
     </div>
-  </script>
+
+    <script id="contactList" type="text/x-handlebars">
+      {{#each contact}}
+      {{> cardTemplate}}
+      {{/each}}
+    </script>
+
+    <script id="contactCard" type="text/x-handlebars">
+      <div class="contact-card">
+        <!-- Set this to display: none in the CSS -->
+        <p class='contact-card-id'>{{ id }}</p>
+        <h3>{{ full_name }}</h3>
+        <h4>Phone Number:</h4>
+        <p>{{ phone_number }}</p>
+        <h4>Email</h4>
+        <p>{{ email }}</p>
+        {{#if tags}}
+        <h4>Tags:</h4>
+        <ul>
+          {{#each tags}}
+          <li>
+            <a href="/">{{this}}</a>
+          </li>
+          {{/each}}
+        </ul>
+        {{/if}}
+      <button type="submit" class="edit-contact-button" id={{ id }}>Edit</button>
+      <button type="submit" class="delete-contact-button" id={{ id }}>Delete</button>
+      </div>
+    </script>
+  </body>
 
 </html>
