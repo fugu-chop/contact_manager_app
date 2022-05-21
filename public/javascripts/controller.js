@@ -120,4 +120,5 @@ document.addEventListener('DOMContentLoaded', () => {
   // This is the default 'homepage' render
   // Header should not be visible during the add/edit contact interaction
   contactManagerController.renderHomeView();
+  contactFrom.showContactForm();
 });

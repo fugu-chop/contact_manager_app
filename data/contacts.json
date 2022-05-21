@@ -19,12 +19,5 @@
     "email": "ph@example.com",
     "phone_number": "54321098761",
     "tags": null
-  },
-  {
-    "full_name": "Arthur Dent",
-    "phone_number": "12345678901",
-    "email": "dent@example.com",
-    "tags": "work,business",
-    "id": 4
   }
 ]
