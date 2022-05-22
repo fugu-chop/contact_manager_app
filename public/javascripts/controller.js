@@ -58,22 +58,17 @@ class Controller {
     });
   }
 
-  // This pathway does not work after the first interaction
-  // After 
   _bindEditContactButtonListener() {
     const editButtons = Array.from(document.getElementsByClassName('edit-contact-button'));
     editButtons.forEach(node => {
       node.addEventListener('click', event => {
         event.preventDefault();
         this._toggleContactForm();
-        this._bindSaveContactButtonListener('edit')
-
+        this._bindSaveContactButtonListener('edit');
       });
     });
   }
 
-  // The function that we call should depend on how we got there
-  // We also need to unbind this whenever the general screen renders
   _bindSaveContactButtonListener(source) {
     const saveContactButton = document.getElementById('submit-button');
     saveContactButton.addEventListener('click', event => this._saveButtonEventHandler(event, source));
@@ -91,13 +86,69 @@ class Controller {
   _saveButtonEventHandler(event, source) {
     event.preventDefault();
     if (source === 'add') {
-      console.log('hello friendo, this is add!')
+      this._findUniqueId().then(id => {
+        this._populateId(id);
+        this._createContact();
+      })
     } else {
-      console.log('hello, this is edit!')
+      // Add edit endpoint
+    }
+    // rerender the page once done
+  }
+
+  _populateId(id) {
+    const idField = document.getElementById('id')
+    idField.value = id;
+  }
+
+  _cleanTagsForSend(tags) {
+    if (!tags) {
+      return null
+    } else {
+      return tags
+        .split(',')
+        .map(tag => tag.trim())
+        .join(',');
     }
   }
 
-  // Try to get this right, rather than cloning
+  _formatPayloadForSend() {
+    const id = Number(document.getElementById('id').value);
+    const full_name = document.getElementById('full_name').value;
+    const email = document.getElementById('email').value;
+    const phone_number = document.getElementById('phone_number').value;
+    const tags = this._cleanTagsForSend(document.getElementById('tags').value);
+
+    return {
+      id,
+      full_name,
+      email,
+      phone_number,
+      tags
+    }
+  }
+
+  async _findUniqueId() {
+    const payload = JSON.parse(await model.getAllContacts());
+    const lastId = payload[payload.length - 1].id;
+    return lastId + 1;
+  }
+
+  async _findCurrentContactId() {
+  }
+
+  async _createContact() {
+    const data = this._formatPayloadForSend();
+    let response;
+    try {
+      response = await model.saveContact(data);
+    } catch (error) {
+      alert(error);
+    }
+  }
+
+  // The 'correct' way is to use removeEventListener. 
+  // I have not been able to get that to work - I think some closure is required to pass in an argument
   _unbindSaveButtonListener() {
     let oldSaveButton = document.getElementById('submit-button');
     var newSaveButton = oldSaveButton.cloneNode(false);
@@ -109,7 +160,7 @@ class Controller {
     return payload.map(entry => {
       let entryCopy = Object.assign({}, entry);
       if (entryCopy.tags) entryCopy.tags = entryCopy.tags.split(',');
-      return entryCopy
+      return entryCopy;
     });
   }
 

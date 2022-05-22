@@ -12,19 +12,37 @@ class ContactForm {
     this.form.appendChild(this.contactDl);
   }
 
+  // Set this as invisible once the autopopulation is working
+  _generateIdField() {
+    const idDt = document.createElement('dt');
+    const idLabel = document.createElement('label');
+    idLabel.setAttribute('for', 'id');
+    idLabel.textContent = 'Contact ID'
+    idDt.appendChild(idLabel);
+    const idDd = document.createElement('dd');
+    const idInput = document.createElement('input');
+    idInput.setAttribute('type', 'text');
+    idInput.setAttribute('name', 'id');
+    idInput.setAttribute('required', '');
+    idInput.id = 'id';
+    idDd.appendChild(idInput);
+    this.contactDl.appendChild(idDt);
+    this.contactDl.appendChild(idDd);
+  }
+
   _generateNameField() {
     const nameDt = document.createElement('dt');
     const nameLabel = document.createElement('label');
-    nameLabel.setAttribute('for', 'name');
+    nameLabel.setAttribute('for', 'full_name');
     nameLabel.textContent = 'Full Name'
     nameDt.appendChild(nameLabel);
     const nameDd = document.createElement('dd');
     const nameInput = document.createElement('input');
     nameInput.setAttribute('type', 'text');
-    nameInput.setAttribute('name', 'name');
+    nameInput.setAttribute('name', 'full_name');
     nameInput.setAttribute('placeholder', 'Enter a full name');
     nameInput.setAttribute('required', '');
-    nameInput.id = 'name';
+    nameInput.id = 'full_name';
     nameDd.appendChild(nameInput);
     this.contactDl.appendChild(nameDt);
     this.contactDl.appendChild(nameDd);
@@ -51,17 +69,17 @@ class ContactForm {
   _generatePhoneField() {
     const phoneDt = document.createElement('dt');
     const phoneLabel = document.createElement('label');
-    phoneLabel.setAttribute('for', 'phone');
+    phoneLabel.setAttribute('for', 'phone_number');
     phoneLabel.textContent = 'Phone Number (format 0123456789)'
     phoneDt.appendChild(phoneLabel);
     const phoneDd = document.createElement('dd');
     const phoneInput = document.createElement('input');
     phoneInput.setAttribute('type', 'tel');
-    phoneInput.setAttribute('name', 'phone');
+    phoneInput.setAttribute('name', 'phone_number');
     phoneInput.setAttribute('pattern', '[0-9]{10}')
     phoneInput.setAttribute('placeholder', 'Enter a phone number:');
     phoneInput.setAttribute('required', '');
-    phoneInput.id = 'phone';
+    phoneInput.id = 'phone_number';
     phoneDd.appendChild(phoneInput);
     this.contactDl.appendChild(phoneDt);
     this.contactDl.appendChild(phoneDd);
@@ -101,6 +119,7 @@ class ContactForm {
   }
 
   _generateForm() {
+    this._generateIdField();
     this._generateNameField();
     this._generateEmailField();
     this._generatePhoneField();
