@@ -52,6 +52,7 @@ class Controller {
       node.addEventListener('click', event => {
         event.preventDefault();
         model.deleteContact(Number(node.id));
+        alert('Contact deleted!');
         this._clearContacts();
         this._showAllContacts();
       });
@@ -89,11 +90,24 @@ class Controller {
       this._findUniqueId().then(id => {
         this._populateId(id);
         this._createContact();
-      })
+        // These should all be done async
+        // perhaps there is a way to wrap these in another promise?
+        // Perhaps I can move this to the createContact method?
+        this._clearContactFormFields();
+        this._toggleContactForm();
+        this._showAllContacts();
+      });
     } else {
       // Add edit endpoint
     }
-    // rerender the page once done
+  }
+
+  _clearContactFormFields() {
+    document.getElementById('id').value = '';
+    document.getElementById('full_name').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('phone_number').value = '';
+    document.getElementById('tags').value = '';
   }
 
   _populateId(id) {
@@ -101,6 +115,7 @@ class Controller {
     idField.value = id;
   }
 
+  // Also get rid of duplicate tags
   _cleanTagsForSend(tags) {
     if (!tags) {
       return null
@@ -108,6 +123,11 @@ class Controller {
       return tags
         .split(',')
         .map(tag => tag.trim())
+        .filter(tag => tag.length > 0)
+        .reduce((arr, tag) => {
+          if (!arr.includes(tag)) arr.push(tag);
+          return arr;
+        }, [])
         .join(',');
     }
   }
@@ -142,6 +162,7 @@ class Controller {
     let response;
     try {
       response = await model.saveContact(data);
+      alert(`Contact created for ${JSON.parse(response).full_name}!`);
     } catch (error) {
       alert(error);
     }

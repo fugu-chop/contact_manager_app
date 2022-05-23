@@ -21,17 +21,10 @@
     "tags": null
   },
   {
-    "full_name": "Billy Blomptish",
+    "full_name": "Tortolio Bortolio",
     "phone_number": "1234567890",
     "email": "jbilly@test.com",
-    "tags": null,
+    "tags": "asdf,ji",
     "id": 4
-  },
-  {
-    "full_name": "Billy Blomptish",
-    "phone_number": "1234567890",
-    "email": "jbilly@test.com",
-    "tags": "asdf",
-    "id": 5
   }
 ]
