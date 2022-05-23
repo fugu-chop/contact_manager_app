@@ -17,7 +17,6 @@ class Controller {
     resetButton.addEventListener('click', event => {
       event.preventDefault();
       headerBar.clearSearchBar();
-      this._clearContacts();
       this._showAllContacts();
     });
   }
@@ -53,7 +52,6 @@ class Controller {
         event.preventDefault();
         model.deleteContact(Number(node.id));
         alert('Contact deleted!');
-        this._clearContacts();
         this._showAllContacts();
       });
     });
