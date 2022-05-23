@@ -4,6 +4,10 @@ import headerBar from './views/headerBar.js'
 import contactForm from './views/contactForm.js';
 
 class Controller {
+  constructor() {
+    this._searchNameActions = this._debounce(this._searchNameActions.bind(this), 300);
+  }
+
   _debounce(func, delay) {
     let timeout;
     return (...args) => {
@@ -25,12 +29,8 @@ class Controller {
     let searchBar = document.getElementById('search-bar');
     searchBar.addEventListener('input', event => {
       event.preventDefault();
-      // Wrap this in a function that calls this._debounce
       const searchTerm = searchBar.value.toLowerCase();
-      const results = this._findContactsByName(searchTerm);
-      const filteredPayloads = results.map(this._createPayloadFromCard);
-      this._clearContacts();
-      this._renderContacts(filteredPayloads);
+      this._searchNameActions(searchTerm);
     });
   }
 
@@ -151,6 +151,13 @@ class Controller {
         .toLowerCase()
         .match(searchTerm);
     });
+  }
+
+  _searchNameActions(searchTerm) {
+    const results = this._findContactsByName(searchTerm);
+    const filteredPayloads = results.map(this._createPayloadFromCard);
+    this._clearContacts();
+    this._renderContacts(filteredPayloads);
   }
 
   _filterTags(event) {
