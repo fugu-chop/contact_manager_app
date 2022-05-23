@@ -137,8 +137,8 @@ class Controller {
     return {
       "id": Number(paragraphFields[0]),
       "full_name": nameField.textContent,
-      "email": paragraphFields[1],
-      "phone_number": paragraphFields[2],
+      "email": paragraphFields[2],
+      "phone_number": paragraphFields[1],
       "tags": tagFields.join(',')
     }
   }
