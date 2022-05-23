@@ -17,7 +17,7 @@ class HeaderBar {
     const resetViewButton = document.createElement('button');
     resetViewButton.type = 'submit';
     resetViewButton.id = 'reset-view-button';
-    resetViewButton.textContent = 'Reset View';
+    resetViewButton.textContent = 'Reset';
 
     [searchBar, addContactButton, resetViewButton].forEach(node => this.parentDiv.appendChild(node));
   }

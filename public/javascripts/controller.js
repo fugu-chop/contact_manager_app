@@ -25,7 +25,12 @@ class Controller {
     let searchBar = document.getElementById('search-bar');
     searchBar.addEventListener('input', event => {
       event.preventDefault();
-      // 
+      // Wrap this in a function that calls this._debounce
+      const searchTerm = searchBar.value.toLowerCase();
+      const results = this._findContactsByName(searchTerm);
+      const filteredPayloads = results.map(this._createPayloadFromCard);
+      this._clearContacts();
+      this._renderContacts(filteredPayloads);
     });
   }
 
@@ -45,6 +50,8 @@ class Controller {
     this._bindCancelButtonListener();
   }
 
+  // Currently, this method does not call itself
+  // I.e. you can't filter tags further than the first click
   _bindTagsListener() {
     let tags = Array.from(document.querySelectorAll('a'));
     tags.forEach(tag => tag.addEventListener('click', event => {
@@ -54,22 +61,6 @@ class Controller {
       this._clearContacts();
       this._renderContacts(filteredPayloads);
     }));
-  }
-
-  _createPayloadFromCard(card) {
-    const nameField = card.querySelector('h3');
-    const paragraphFields = Array.from(card.querySelectorAll('p'))
-      .map(element => element.textContent);
-    const tagFields = Array.from(card.querySelectorAll('a'))
-      .map(element => element.textContent);
-
-    return {
-      "id": Number(paragraphFields[0]),
-      "full_name": nameField.textContent,
-      "email": paragraphFields[1],
-      "phone_number": paragraphFields[2],
-      "tags": tagFields.join(',')
-    }
   }
 
   _bindDeleteContactButtonListener() {
@@ -133,6 +124,32 @@ class Controller {
       document.getElementById('email').value = payloadObject.email;
       document.getElementById('phone_number').value = payloadObject.phone_number;
       document.getElementById('tags').value = payloadObject.tags;
+    });
+  }
+
+  _createPayloadFromCard(card) {
+    const nameField = card.querySelector('h3');
+    const paragraphFields = Array.from(card.querySelectorAll('p'))
+      .map(element => element.textContent);
+    const tagFields = Array.from(card.querySelectorAll('a'))
+      .map(element => element.textContent);
+
+    return {
+      "id": Number(paragraphFields[0]),
+      "full_name": nameField.textContent,
+      "email": paragraphFields[1],
+      "phone_number": paragraphFields[2],
+      "tags": tagFields.join(',')
+    }
+  }
+
+  _findContactsByName(searchTerm) {
+    const contactsArr = Array.from(document.getElementsByClassName('contact-card'));
+    return contactsArr.filter(contact => {
+      return contact.querySelector('h3')
+        .textContent
+        .toLowerCase()
+        .match(searchTerm);
     });
   }
 
