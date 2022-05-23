@@ -45,6 +45,33 @@ class Controller {
     this._bindCancelButtonListener();
   }
 
+  _bindTagsListener() {
+    let tags = Array.from(document.querySelectorAll('a'));
+    tags.forEach(tag => tag.addEventListener('click', event => {
+      event.preventDefault();
+      const filteredContacts = this._filterTags(event);
+      const filteredPayloads = filteredContacts.map(this._createPayloadFromCard);
+      this._clearContacts();
+      this._renderContacts(filteredPayloads);
+    }));
+  }
+
+  _createPayloadFromCard(card) {
+    const nameField = card.querySelector('h3');
+    const paragraphFields = Array.from(card.querySelectorAll('p'))
+      .map(element => element.textContent);
+    const tagFields = Array.from(card.querySelectorAll('a'))
+      .map(element => element.textContent);
+
+    return {
+      "id": Number(paragraphFields[0]),
+      "full_name": nameField.textContent,
+      "email": paragraphFields[1],
+      "phone_number": paragraphFields[2],
+      "tags": tagFields.join(',')
+    }
+  }
+
   _bindDeleteContactButtonListener() {
     const deleteButtons = Array.from(document.getElementsByClassName('delete-contact-button'));
     deleteButtons.forEach(node => {
@@ -101,11 +128,20 @@ class Controller {
   _populateContactFormInfo() {
     const contactId = document.getElementById('id').value;
     model.getContact(contactId).then(payload => {
-      const payloadObject = JSON.parse(payload)
+      const payloadObject = JSON.parse(payload);
       document.getElementById('full_name').value = payloadObject.full_name;
       document.getElementById('email').value = payloadObject.email;
       document.getElementById('phone_number').value = payloadObject.phone_number;
       document.getElementById('tags').value = payloadObject.tags;
+    });
+  }
+
+  _filterTags(event) {
+    const tagName = event.target.textContent;
+    const contactsArr = Array.from(document.getElementsByClassName('contact-card'));
+    return contactsArr.filter(contact => {
+      return Array.from(contact.querySelectorAll('a'))
+        .map(aTag => aTag.textContent).includes(tagName);
     });
   }
 
@@ -133,7 +169,7 @@ class Controller {
   }
 
   _populateId(id) {
-    const idField = document.getElementById('id')
+    const idField = document.getElementById('id');
     idField.value = id;
   }
 
@@ -228,10 +264,11 @@ class Controller {
   async _showAllContacts() {
     this._clearContacts();
     let payload = await contactModel.getAllContacts();
-    let data = JSON.parse(payload)
+    let data = JSON.parse(payload);
     contactManagerController._renderContacts(data);
     contactManagerController._bindDeleteContactButtonListener();
     contactManagerController._bindEditContactButtonListener();
+    contactManagerController._bindTagsListener();
   }
 
   async renderHomeView() {
