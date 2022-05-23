@@ -12,7 +12,6 @@ class ContactForm {
     this.form.appendChild(this.contactDl);
   }
 
-  // Set this as invisible once the autopopulation is working
   _generateIdField() {
     const idDt = document.createElement('dt');
     const idLabel = document.createElement('label');
@@ -28,6 +27,8 @@ class ContactForm {
     idDd.appendChild(idInput);
     this.contactDl.appendChild(idDt);
     this.contactDl.appendChild(idDd);
+    idDt.style = 'display: none';
+    idInput.style = 'display: none';
   }
 
   _generateNameField() {
@@ -139,6 +140,14 @@ class ContactForm {
     const header = document.querySelector('header');
     this._generateForm();
     header.insertAdjacentElement('afterend', this.parentDiv);
+  }
+
+  clearContactFormFields() {
+    document.getElementById('id').value = '';
+    document.getElementById('full_name').value = '';
+    document.getElementById('email').value = '';
+    document.getElementById('phone_number').value = '';
+    document.getElementById('tags').value = '';
   }
 }
 

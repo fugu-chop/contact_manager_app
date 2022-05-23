@@ -64,6 +64,8 @@ class Controller {
     editButtons.forEach(node => {
       node.addEventListener('click', event => {
         event.preventDefault();
+        this._populateId(event.target.id);
+        this._populateContactFormInfo();
         this._toggleContactForm();
         this._bindSaveContactButtonListener('edit');
       });
@@ -87,27 +89,49 @@ class Controller {
   _saveButtonEventHandler(event, source) {
     event.preventDefault();
     if (source === 'add') {
-      this._findUniqueId().then(id => {
-        this._populateId(id);
-        this._createContact();
-        // These should all be done async
-        // perhaps there is a way to wrap these in another promise?
-        // Perhaps I can move this to the createContact method?
-        this._clearContactFormFields();
-        this._toggleContactForm();
-        this._showAllContacts();
+      this._addContactSequence().then(() => {
+        this._cleanupContactFormActions();
       });
     } else {
-      // Add edit endpoint
+      this._editContactSequence().then(response => {
+        alert(`Contact details for ${JSON.parse(response).full_name} successfully updated!`);
+        this._cleanupContactFormActions();
+      })
     }
   }
 
-  _clearContactFormFields() {
-    document.getElementById('id').value = '';
-    document.getElementById('full_name').value = '';
-    document.getElementById('email').value = '';
-    document.getElementById('phone_number').value = '';
-    document.getElementById('tags').value = '';
+  _populateContactFormInfo() {
+    const contactId = document.getElementById('id').value;
+    model.getContact(contactId).then(payload => {
+      const payloadObject = JSON.parse(payload)
+      document.getElementById('full_name').value = payloadObject.full_name;
+      document.getElementById('email').value = payloadObject.email;
+      document.getElementById('phone_number').value = payloadObject.phone_number;
+      document.getElementById('tags').value = payloadObject.tags;
+    });
+  }
+
+  async _editContactSequence() {
+    const id = document.getElementById('id').value;
+    const payload = this._formatPayloadForSend();
+    try {
+      const response = model.updateContact(id, payload);
+      return response;
+    } catch (error) {
+      alert(error);
+    }
+  }
+
+  _cleanupContactFormActions() {
+    contactForm.clearContactFormFields();
+    this._toggleContactForm();
+    this._showAllContacts();
+  }
+
+  async _addContactSequence() {
+    const id = await this._findUniqueId();
+    this._populateId(id);
+    this._createContact();
   }
 
   _populateId(id) {
@@ -115,7 +139,6 @@ class Controller {
     idField.value = id;
   }
 
-  // Also get rid of duplicate tags
   _cleanTagsForSend(tags) {
     if (!tags) {
       return null
@@ -152,9 +175,6 @@ class Controller {
     const payload = JSON.parse(await model.getAllContacts());
     const lastId = payload[payload.length - 1].id;
     return lastId + 1;
-  }
-
-  async _findCurrentContactId() {
   }
 
   async _createContact() {
@@ -226,7 +246,6 @@ class Controller {
 const contactManagerController = new Controller();
 
 document.addEventListener('DOMContentLoaded', () => {
-  // This is the default 'homepage' render
   contactManagerController.renderHomeView();
   contactForm.renderContactForm();
 });
