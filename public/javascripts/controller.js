@@ -80,7 +80,7 @@ class Controller {
     editButtons.forEach(node => {
       node.addEventListener('click', event => {
         event.preventDefault();
-        this._populateId(event.target.id);
+        contactForm.populateId(event.target.id);
         this._populateContactFormInfo();
         this._toggleContactForm();
         this._bindSaveContactButtonListener('edit');
@@ -120,10 +120,7 @@ class Controller {
     const contactId = document.getElementById('id').value;
     model.getContact(contactId).then(payload => {
       const payloadObject = JSON.parse(payload);
-      document.getElementById('full_name').value = payloadObject.full_name;
-      document.getElementById('email').value = payloadObject.email;
-      document.getElementById('phone_number').value = payloadObject.phone_number;
-      document.getElementById('tags').value = payloadObject.tags;
+      contactForm.populateForm(payloadObject);
     });
   }
 
@@ -188,13 +185,8 @@ class Controller {
 
   async _addContactSequence() {
     const id = await this._findUniqueId();
-    this._populateId(id);
+    contactForm.populateId(id);
     this._createContact();
-  }
-
-  _populateId(id) {
-    const idField = document.getElementById('id');
-    idField.value = id;
   }
 
   _cleanTagsForSend(tags) {

@@ -24,7 +24,7 @@
     "full_name": "Tortolio Bortolio",
     "phone_number": "1234567891",
     "email": "jbilly@test.com",
-    "tags": "fingle,bingle,wingle",
+    "tags": "asdf",
     "id": 5
   },
   {
@@ -33,5 +33,12 @@
     "email": "yort@yort.com",
     "tags": "asdf",
     "id": 6
+  },
+  {
+    "full_name": "Jolly Bolly",
+    "phone_number": "4564564567",
+    "email": "yeti@tyro.com",
+    "tags": "asdf",
+    "id": 7
   }
 ]

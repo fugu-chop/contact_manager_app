@@ -149,6 +149,18 @@ class ContactForm {
     document.getElementById('phone_number').value = '';
     document.getElementById('tags').value = '';
   }
+
+  populateForm(payloadObject) {
+    document.getElementById('full_name').value = payloadObject.full_name;
+    document.getElementById('email').value = payloadObject.email;
+    document.getElementById('phone_number').value = payloadObject.phone_number;
+    document.getElementById('tags').value = payloadObject.tags;
+  }
+
+  populateId(id) {
+    const idField = document.getElementById('id');
+    idField.value = id;
+  }
 }
 
 export default new ContactForm();
